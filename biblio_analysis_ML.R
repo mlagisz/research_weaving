@@ -1,3 +1,9 @@
+### ML: using bibliometrix package to do some bibliometric analyses and graphs 
+### for our old meta-analystic (systematic map) dataset published in:
+### Nakagawa S, Lagisz M, Hector KL, Spencer HG. 2012. 
+### Comparative and meta-analytic insights into life extension via dietary restriction. 
+### Aging Cell. doi:10.1111/j.1474-9726.2012.00798.x.
+
 library(bibliometrix, dplyr)	
 library(readxl)
 
@@ -67,14 +73,14 @@ par(mfrow=c(1,1), mar=c(0,0,0,0))
 M <- metaTagExtraction(bib, Field = "CR_AU", sep = ";")
 NetMatrix <- biblioNetwork(M, analysis = "collaboration", network = "authors", sep = ";")
 net <- networkPlot(NetMatrix, n = 100, cluster="walktrap", Title = "", labelsize = 1, type = "fruchterman", size=TRUE, remove.multiple=TRUE)	
-dev.off()
+dev.off() #note, changing n alters the colurs and arrangements of the authors and clusters
 ###################################################################################
 
-#Note: countries cannot be extracted from bib
+#Note: countries cannot be extracted from our bib
 
 
 #####################  Figure - HISTORICAL CO-CITATION NETWORK  ####################################################
-pdf(file="Figure_hstorical_network.pdf", width=8, height=8, pointsize=10)
+pdf(file="Figure_historical_network.pdf", width=8, height=8, pointsize=10)
 par(mfrow=c(1,1), mar=c(0,0,0,0))
 M <- metaTagExtraction(bib, Field = "CR_AU", sep = ";")
 histResults <- histNetwork(M, n=143, sep = ";") # "n" (number of most cited references to select) picked manually, larger numbers give error
@@ -116,6 +122,7 @@ net <- networkPlot(S, n = 500, Title = "co-occurrence network", type="fruchterma
 
 #####################  Figure - THEMATIC MAP  ####################################################
 pdf(file="Figure_thematic_map.pdf",width=8,height=8,pointsize=10)
+net <- networkPlot(S, n = 100, Title = "co-occurrence network", type="fruchterman", labelsize = 0.7, halo = FALSE, cluster = "walktrap",remove.isolates=FALSE, remove.multiple=FALSE, noloops=TRUE, weighted=TRUE)
 res <- thematicMap(net, NetMatrix, S)
 plot(res$map)
 dev.off()
@@ -209,4 +216,3 @@ str(dat_merged)
 write.csv(dat_merged, "dat_merged.csv", row.names = FALSE)
 
 #########################################
-
